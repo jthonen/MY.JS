@@ -2,6 +2,10 @@ body {
     background-color: lightgrey;
 }
 
+
+#graphics {
+}
+
 .label-bold {
     color: black;
     font-weight: bold;
@@ -12,10 +16,13 @@ body {
     font-weight: bold !important;
 }
 
-.jumbotron {
-    background-color: rgb(97, 178, 167);
-    color: white;
-}
+#navi {
+    background-color: #ffffff;
+    background-image: url("../images/numbers-back.png");
+    background-repeat: no-repeat;
+      }
+
+
 
 /* #searchForm{
     display: absolute;
