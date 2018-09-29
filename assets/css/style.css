@@ -17,19 +17,6 @@ body {
     color: white;
 }
 
-/* #searchForm{
-    display: absolute;
-    width: 50%;
-    margin-left: 11%;
-    margin-top: 70px;
-}
-
-.form-control:focus,
-.btn:focus {
-    border-color: none !important;
-    box-shadow: none !important;
-} */
-
 .input-group-form {
     margin: 5px;
 }
