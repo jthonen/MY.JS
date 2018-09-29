@@ -17,10 +17,16 @@ body {
     color: white;
 }
 
-.input-group-form {
-    margin: 5px;
+.input-group-form1 {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+.input-group-form2 {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
 }
 
 .display-form {
-    margin: 0;
+    margin: 10px;
 }
