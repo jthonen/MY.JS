@@ -27,30 +27,26 @@
             <div class='col-md-5'>
                 <div class="card-heading">
                     <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="trend-input">Trend search</label>
-                                <div id="trendId">
-                                    <input class="form-control" id="trend-input" placeholder="trend" type="text">
-                                    <button class="btn btn-primary float-right" id="search-trend-btn">Submit</button>
-                                </div>
-                            </div>
-                        </form>
+                        <label class="font-weight-bold" for="trend-input">Trend search</label>
+                        <div class="input-group">
+                            <input type="text" id="trendTextId" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" id="searchTrend" type="button">Go!</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class='col-md-5'>
                 <div class="card-heading">
                     <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="stock-input">Trend search</label>
-                                <div id="trendId">
-                                    <input class="form-control" id="stock-input" placeholder="stock" type="text">
-                                    <button class="btn btn-primary float-right" id="search-stock-btn">Submit</button>
-                                </div>
-                            </div>
-                        </form>
+                        <label class="font-weight-bold" for="stock-input">Stock search</label>
+                        <div class="input-group">
+                            <input type="text" id="stockTextId" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" id="searchStock" type="button">Go!</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,8 +59,9 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 </body>
 
 </html>
