@@ -31,3 +31,9 @@ body {
 .display-form {
     margin: 10px;
 }
+
+#navi {
+    background-color: #ffffff;
+    background-image: url("../images/numbers-back.png");
+    background-repeat: no-repeat;
+}
