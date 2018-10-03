@@ -96,7 +96,7 @@ $(document).ready(function () {
         // call ajax to get latest business
         $("#article-id").empty();
         var name = $(this).attr("data-name");
-        //var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=4JIvycUq3oYpZEEoUjlZhfz5orHCbC9D&q=" + name + "&limit=10&offset=0&rating=R&lang=en";
+
         var queryURL = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=e20759f693844c8d9336061b37eb2d02";
         // Creates AJAX call 
         $.ajax({
