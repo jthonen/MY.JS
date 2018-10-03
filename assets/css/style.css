@@ -57,3 +57,8 @@ body {
 .business-article {
     margin-top: 40px;
 }
+
+p {
+    line-height: 30px;
+    margin-top: 10px;
+  }
