@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MY.JS</title>
+    <title>Document</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -37,27 +37,45 @@
             </nav>
         </div>
     </div>
-
     <div class="container-fluid">
         <div class="row justify-content-md-center display-form">
+            <div class='col-md-5 '>
+                <div class="card-heading">
+                    <div class="card-body input-group-form1">
+                        <label class="font-weight-bold" for="trend-input">Trend search</label><span style="color:red"
+                            id="empty-search"></span>
+                        <div class="input-group ">
+                            <input type="text" id="trendTextId" required="true" class="form-control" placeholder="Finance">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" id="searchTrend" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-5'>
+                <div class="card-heading">
+                    <div class="card-body input-group-form2">
+                        <label class="font-weight-bold" for="stock-input">Stock search</label><span style="color:red"
+                            id="empty-stock"></span>
+                        <div class="input-group">
+                            <input type="text" id="stockTextId" class="form-control" placeholder="AFH, BBBY,INTC">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" id="searchStock" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center display-form">
             <div class="col-md-10">
-                <div class="card border border-success business-article">
+                <div class="card border border-success">
+                    <div class="card-title border border-success bg-success">
+                        <div class="label card-heading text-center text-white">$$ What the Numbers Say $$</div>
+                    </div>
                     <div class="card-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vestibulum luctus
-                            felis, ac rhoncusnunc
-                            porttitor condimentum. Mauris sit amet dolor eu elit varius varius facilisis id arcu.
-                            Proinvel
-                            dui massa. Nunc rhoncus fringilla pharetra. Vestibulum bibendum consectetur euismod.
-                            Proin commodopurus
-                            vitae sollicitudin consectetur.
-                        </p>
-                        <p>Donec vehicula lacus at leo feugiat lacinia. In et ex ultrices, ultrices neque non,
-                            pretium odio. Nunc
-                            id eros iaculis, pulvinar quam eget, egestas mauris.</p>
-                        <p>Suspendisse dictum, arcu at convallis faucibus, quam sapien tincidunt nunc, sit amet
-                            egestas nibh tortor
-                            et mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
-                            ridiculus mus.</p>
+                        <div id="google-trend-img"></div>
                     </div>
                 </div>
             </div>

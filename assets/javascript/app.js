@@ -1,19 +1,26 @@
-$(document).ready(function(){
+var stockTerm = [];
+var trendTerm = "";
+var isTrendValid = false;
+var isStockValid = false;
 
-    var stockTerm = $("#stockTextId").val().trim();
-    var trendTerm = $("#trendTextId").val().trim();
-    var isTrendValid = false;
-    var isStockValid = false;
+$(document).ready(function () {
+
+    //initGraph();     // display example stock graph 
+
+    getBusinessNews();
 
     $("#searchTrend").on("click", function (event) {
         event.preventDefault();
         console.log("searchTrend click");
-        var stockVal = $("#stockTextId").val().trim();
-        var trendVal = $("#trendTextId").val().trim();
-        isStockValid = validateStockInput(stockVal);
+        var trendVal = $("#trendTextId").val();
         isTrendValid = validateTrendInput(trendVal);
-        if (isTrendValid && isStockValid) { 
-            displayGraph();
+
+        if (isTrendValid) {
+            stocks = $("#stockTextId").val();
+            isStockValid = validateStockInput(stocks);
+            if (isStockValid) {
+                displayGraph();
+            }
         }
     })
 
@@ -124,6 +131,37 @@ $(document).ready(function(){
             console.log("end of stock data print")
     });
 
+    function getBusinessNews() {
+        // call ajax to get latest business
+        $("#article-id").empty();
+        var name = $(this).attr("data-name");
+        var queryURL = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=e20759f693844c8d9336061b37eb2d02";
+        // Creates AJAX call 
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+                $("#article-id").empty();
+                var results = response.articles;
+                for (i = 0; i < results.length; i++) {
+                    var listDiv = $("<div>");
+                    var source = $("<p2>").addClass("font-italic").text("source: " + results[i].source.name);
+                    source.append("<br>");
+                    var newsHeading = $("<a>");
+                    newsHeading.addClass("text-primary");
+                    newsHeading.addClass("font-weight-bold");
+                    newsHeading.attr("href", results[i].url);
+                    newsHeading.attr("target", "_blank");
+                    newsHeading.append(results[i].title);
+                    var description = $("<h5>");
+                    description.append(results[i].description);
+                    listDiv.append(source).append(newsHeading).append(description);
+                    //add new div to existing divs
+                    $("#article-id").append(listDiv);
+                }        
+        });
+    };
+
   // google charts tech code 
 
     google.charts.load('current', {'packages':['line']});
@@ -167,4 +205,9 @@ $(document).ready(function(){
 
       chart.draw(data, google.charts.Line.convertOptions(options));
     }
+    // function initGraph() {
+    //     $("#google-trend-img").empty();
+    //     var image = $("<img>").attr("src", "assets/images/trends-example.png");
+    //     $("#google-trend-img").append(image);
+    // }
 });
