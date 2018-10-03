@@ -1,6 +1,6 @@
 
 var stockTerm = [];
-var trendTerm = null;
+var trendTerm = "";
 var isTrendValid = false;
 var isStockValid = false;
 
@@ -15,8 +15,13 @@ $(document).ready(function () {
         console.log("searchTrend click");
         var trendVal = $("#trendTextId").val();
         isTrendValid = validateTrendInput(trendVal);
-        if (isTrendValid && isStockValid) { 
-            displayGraph();
+
+        if (isTrendValid) {
+            stocks = $("#stockTextId").val();
+            isStockValid = validateStockInput(stocks);
+            if (isStockValid) {
+                displayGraph();
+            }
         }
     })
 
@@ -78,9 +83,12 @@ $(document).ready(function () {
         event.preventDefault();
         var stockVal = $("#stockTextId").val();
         isStockValid = validateStockInput(stockVal);
-
-        if (isTrendValid && isStockValid) {
-            displayGraph();
+        if (isStockValid) {
+            trendTerm = $("#trendTextId").val();
+            isTrendValid = validateTrendInput(trendTerm);
+            if (isTrendValid) {
+                displayGraph();
+            }
         }
     })
 

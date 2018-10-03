@@ -39,6 +39,7 @@ body {
 
 #navi {
     background-color: #ffffff;
+    height: 125px;
     background-image: url("../images/numbers-back.png");
     background-repeat: no-repeat;
 }
