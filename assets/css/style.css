@@ -32,8 +32,27 @@ body {
     margin: 10px;
 }
 
+.p2 {
+    margin-top: 15px !important;
+    margin-bottom: 2px;
+}
+
 #navi {
     background-color: #ffffff;
     background-image: url("../images/numbers-back.png");
     background-repeat: no-repeat;
+}
+
+.h51 {
+    margin-left: 20px;
+}
+
+.nav-link {
+    color: green !important;
+    font-size: 22px;
+    font-weight: bold !important;
+}
+
+.business-article {
+    margin-top: 40px;
 }
