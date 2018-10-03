@@ -5,8 +5,6 @@ $(document).ready(function(){
     var isTrendValid = false;
     var isStockValid = false;
 
-    //initGraph();     // display example stock graph 
-
     $("#searchTrend").on("click", function (event) {
         event.preventDefault();
         console.log("searchTrend click");
@@ -63,7 +61,7 @@ $(document).ready(function(){
     trendArray = []
     
     
-    // first ajax call for google trends - steven's node.js 
+    // first ajax call for google trends - steven's node.js turned into a ajax callable api
     var term = 'pepsi';
     var queryurl = 'https://googletrendsthegame.herokuapp.com/trends?terms=' + term;
 
@@ -74,49 +72,57 @@ $(document).ready(function(){
         var result = Object.values(response);
         var parseResults = JSON.parse(result);
         var timeData = parseResults.default.timelineData
-        for (i = 0; i< timeData.length; i++) {
-            console.log(timeData[i].time)
-            var time = moment(timeData[i].time).format("M:D");
-            console.log(time);
-            var value = timeData[i].value;
-            console.log(value);
-            trendArray.push(time, value)        
+        console.log(parseResults);
+        var timeMonthVal = ''; 
+        var trendValue = ''; 
+
+        for (i = timeData.length -3 ; i< timeData.length ; i++) {
+            var rawTime = timeData[i].formattedTime;
+            //console.log(rawTime);
+            var month = rawTime.split(" ");
+            //console.log(month);
+            var monthVal = month[0];
+            var monthFormat = 
+            console.log(monthVal);
+            var value = timeData[i].value[0];
+            console.log(value);    
+            trendArray.push(monthVal, value);
         }
+        console.log(trendArray);
     });
 
-    // second ajax call for stock market api
-
-    var term = 'APPL';
-    var queryurl1 = "https://api.iextrading.com/1.0/stock/" + term + "/chart/1y";
-
+    currentMonth = moment().format('MM');
+    startingMonth = currentMonth - 3;
+    if (startingMonth <= 9)    {
+        startingMonth = "0"+startingMonth+"";
+    }
+    var startingDate = moment().format('YYYY'+startingMonth+'DD');
+    monthData = [[],[],[],[]];
+    var tickerName = "MSFT";
     $.ajax({
-        url: queryurl1, 
+        url: "https://api.iextrading.com/1.0/stock/"+tickerName+"/chart/3M/"+startingDate+"",
         method: "GET"
-        }).then(function(response2){
-            console.log(response2);
-            for (i=0; i < response2.length; i++) {
-                console.log(response2[i].close);
+        }).then(function(response)  {
+            console.log(response);
+            for (i=0; i < response.length; i++) {
+                var day = response[i];
+                var date = day.date;
+                var dataMonth = ""+date[5]+""+""+date[6]+"";
+                monthData[dataMonth-startingMonth].push(day.close);
+            };        
+            var monthAverages = [];
+            for (i=0; i < monthData.length; i++)   {
+                var crunch = monthData[i];
+                currentVal = 0;
+                for (j=0; j < crunch.length; j++)   {
+                    currentVal = currentVal + crunch[j];
+                }
+                var avgVal = (currentVal/crunch.length).toFixed(2);
+                monthAverages.push(avgVal);
             };
+            console.log(monthAverages);
             console.log("end of stock data print")
     });
-
-  // Initialize Firebase
-
-//   var config = {
-//     apiKey: "AIzaSyAtquiygP1tikBs5Fr6w0hj9Y7oqrbn5EQ",
-//     authDomain: "myjs-c48d7.firebaseapp.com",
-//     databaseURL: "https://myjs-c48d7.firebaseio.com",
-//     projectId: "myjs-c48d7",
-//     storageBucket: "myjs-c48d7.appspot.com",
-//     messagingSenderId: "96560492727"
-//   };
-//   firebase.initializeApp(config);
-
-//   var database = firebase.database();
-
-//   database.ref().on('value', function(snapshot) {
-
-//   })  
 
   // google charts tech code 
 
@@ -153,7 +159,7 @@ $(document).ready(function(){
           title: 'Comparison of' + stockTerm + 'against' + trendTerm,
           subtitle: 'What are your wildest dreams?'
         },
-        width: 1300,
+        width: 1200,
         height: 500
       };
 
