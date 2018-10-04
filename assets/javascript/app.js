@@ -24,15 +24,20 @@ $(document).ready(function () {
         }
     })
 
+    function callMe() {
+        $('#empty-stock').text("");
+        console.log("888clear");
+    }
+
     // eliminate empty stock name
     function validateStockInput(stockVal) {
         var stocks = [];
         if (stockVal === "") {
             console.log("stock is empty");
             $('#empty-stock').text(" *Stock symbol can not be empty");
-            setTimeout(function () {
-                $('#empty-stock').text("");
-            }, 2000);
+            // setTimeout(function () {
+            //     $('#empty-stock').text("");
+            // }, 2000);
             isStockValid = false;
         }
         else {
@@ -47,15 +52,15 @@ $(document).ready(function () {
         }
         stockTerm = stocks;
         return isStockValid;
-    }
+    } 
 
     function validateTrendInput(trend) {
         if (trend === "") {
             console.log("trend is empty");
             $('#empty-search').text(" *Trend can not be empty");
-            setTimeout(function () {
-                $('#empty-search').text("");
-            }, 2000);
+            // setTimeout(function () {
+            //     $('#empty-search').text("");
+            // }, 2000);
             isTrendValid = false;
         }
         else {
@@ -155,7 +160,7 @@ $(document).ready(function () {
                     newsHeading.append(results[i].title);
                     var description = $("<h5>");
                     description.append(results[i].description);
-                    listDiv.append(source).append(newsHeading).append(description);
+                    listDiv.append(source).append(newsHeading).append(description).append("<br>");
                     //add new div to existing divs
                     $("#article-id").append(listDiv);
                 }        
