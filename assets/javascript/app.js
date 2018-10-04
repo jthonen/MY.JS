@@ -123,7 +123,7 @@ $(document).ready(function () {
                 currentVal = 0;
                 for (j=0; j < crunch.length; j++)   {
                     currentVal = currentVal + crunch[j];
-                }
+                } 
                 var avgVal = (currentVal/crunch.length).toFixed(2);
                 monthAverages.push(avgVal);
             };
