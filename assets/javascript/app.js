@@ -2,11 +2,19 @@ var stockTerm = [];
 var trendTerm = "";
 var isTrendValid = false;
 var isStockValid = false;
+currentMonth = moment().format('MM');
+startingMonth = currentMonth - 3;
+if (startingMonth <= 9)    {
+    startingMonth = "0"+startingMonth+"";
+}
+var startingDate = moment().format('YYYY'+startingMonth+'DD');
+monthData = [[],[],[],[]];
+var tickerName = "";
+var monthAverages = [];
+var trendPoints = [];
 
 $(document).ready(function () {
-
-    //initGraph();     // display example stock graph 
-
+  
     getBusinessNews();
 
     $("#searchTrend").on("click", function (event) {
@@ -19,7 +27,11 @@ $(document).ready(function () {
             stocks = $("#stockTextId").val();
             isStockValid = validateStockInput(stocks);
             if (isStockValid) {
-                displayGraph();
+                monthAverages = [];
+                trendPoints = [];
+                trendSearch();
+                stockSearch();
+                
             }
         }
     })
@@ -69,68 +81,126 @@ $(document).ready(function () {
     
     
     // first ajax call for google trends - steven's node.js turned into a ajax callable api
-    var term = 'pepsi';
-    var queryurl = 'https://googletrendsthegame.herokuapp.com/trends?terms=' + term;
-
-    $.ajax({
-        url: queryurl,
-        method: "GET"
-    }).then(function(response) {
-        var result = Object.values(response);
-        var parseResults = JSON.parse(result);
-        var timeData = parseResults.default.timelineData
-        console.log(parseResults);
-        var timeMonthVal = ''; 
-        var trendValue = ''; 
-
-        for (i = timeData.length -3 ; i< timeData.length ; i++) {
-            var rawTime = timeData[i].formattedTime;
-            //console.log(rawTime);
-            var month = rawTime.split(" ");
-            //console.log(month);
-            var monthVal = month[0];
-            var monthFormat = 
-            console.log(monthVal);
-            var value = timeData[i].value[0];
-            console.log(value);    
-            trendArray.push(monthVal, value);
-        }
-        console.log(trendArray);
-    });
-
-    currentMonth = moment().format('MM');
-    startingMonth = currentMonth - 3;
-    if (startingMonth <= 9)    {
-        startingMonth = "0"+startingMonth+"";
-    }
-    var startingDate = moment().format('YYYY'+startingMonth+'DD');
-    monthData = [[],[],[],[]];
-    var tickerName = "MSFT";
-    $.ajax({
-        url: "https://api.iextrading.com/1.0/stock/"+tickerName+"/chart/3M/"+startingDate+"",
-        method: "GET"
+    function trendSearch(){
+        var googleURL = "https://googletrendsthegame.herokuapp.com/trends?terms="+trendTerm+"";
+        $.ajax({
+            url: googleURL,
+            method: "GET"
         }).then(function(response)  {
-            console.log(response);
-            for (i=0; i < response.length; i++) {
-                var day = response[i];
-                var date = day.date;
-                var dataMonth = ""+date[5]+""+""+date[6]+"";
-                monthData[dataMonth-startingMonth].push(day.close);
-            };        
-            var monthAverages = [];
-            for (i=0; i < monthData.length; i++)   {
-                var crunch = monthData[i];
-                currentVal = 0;
-                for (j=0; j < crunch.length; j++)   {
-                    currentVal = currentVal + crunch[j];
-                } 
-                var avgVal = (currentVal/crunch.length).toFixed(2);
-                monthAverages.push(avgVal);
+            var results = Object.values(response);
+            var parsedResults = JSON.parse(results);
+            var timelineData = parsedResults.default.timelineData;
+            rearrangedSet = [];
+            for (var k = timelineData.length; k > -1; k -= 1){
+                 rearrangedSet.push(timelineData[k]);
+            }
+            var trendObject = [];
+            for (i=0; i < 5; i++)   {
+                if (rearrangedSet[i] === undefined) continue
+                else {
+                    trendObject.push(rearrangedSet[i]);
+                }
             };
-            console.log(monthAverages);
-            console.log("end of stock data print")
-    });
+            for (i=0; i < trendObject.length; i++)  {
+                trendPoints[i] =trendObject[i].value[0];
+                trendPoints.push(trendPoints[i]);
+            };
+            trendPoints.splice(-1,1);
+            console.log("end of trends data print")
+            return trendPoints;
+        });
+        console.log(trendPoints);
+    };
 
+    function stockSearch() {
+        currentMonth = moment().format('MM');
+        startingMonth = currentMonth - 3;
+        if (startingMonth <= 9)    {
+            startingMonth = "0"+startingMonth+"";
+        }
+        var startingDate = moment().format('YYYY'+startingMonth+'DD');
+        monthData = [[],[],[],[]];
+        var tickerName = stockTerm[0];
+        $.ajax({
+            url: "https://api.iextrading.com/1.0/stock/"+tickerName+"/chart/3M/"+startingDate+"",
+            method: "GET"
+            }).then(function(response)  {
+                for (i=0; i < response.length; i++) {
+                    var day = response[i];
+                    var date = day.date;
+                    var dataMonth = ""+date[5]+""+""+date[6]+"";
+                    monthData[dataMonth-startingMonth].push(day.close);
+                };        
+                for (i=0; i < monthData.length; i++)   {
+                    var crunch = monthData[i];
+                    currentVal = 0;
+                    for (j=0; j < crunch.length; j++)   {
+                        currentVal = currentVal + crunch[j];
+                    } 
+                    var avgVal = (currentVal/crunch.length).toFixed(2);
+                    monthAverages.push(avgVal);
+                };
+                console.log(monthAverages);
+                console.log("end of stock data print")
+                googlechart(tickerName, trendTerm);
+            });
+    };
+
+    
+
+  // google charts tech code 
+    function googlechart(stock, trend) {
+        // This section is to load the google chart
+        google.charts.load('current', {'packages':['line']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Date');
+            data.addColumn('number', stock+" Avg. Monthly Stock Price");
+            data.addColumn('number', trend+" = Search Query");
+
+            data.addRows([
+                ["Jul. 30, 2018",  Number(monthAverages[0]), trendPoints[3]],
+                ["Aug. 30, 2018", Number(monthAverages[1]), trendPoints[2]],
+                ["Sep. 30, 2018", Number(monthAverages[2]), trendPoints[1]],
+            ]);
+            
+            var options = {
+                chart: {
+                    title: stockTerm[0]+' Average Monthly Stock Price',
+                    subtitle: 'in dollars (USD)'
+                },
+                width: 1200,
+                height: 550,
+                vAxis: {
+                    viewWindowMode:'explicit',
+                    viewWindow: {
+                        min: 0,
+                        max: (100 || 500 || 1000 || 5000)
+                    }
+                },
+                series: {
+                    0: {axis: 'stockPrice'},
+                    1: {axis: 'trendPoints'}
+                },
+                axes: {
+                    x: {
+                    0: {side: 'bottom'}
+                    },
+                    y: {
+                        stockPrice: {label: 'Avg. Monthly Stock Price'},
+                        trendPoints: {label: "Query Monthly Trend 'Value'"}
+                    }
+                }
+            };
+
+        var chart = new google.charts.Line(document.getElementById('google-trend-img'));
+        chart.draw(data, google.charts.Line.convertOptions(options));
+        console.log(monthAverages);
+        console.log(trendPoints);
+        console.log('ChartDrawn');
+    };
+}
     function getBusinessNews() {
         // call ajax to get latest business
         $("#article-id").empty();
@@ -161,53 +231,4 @@ $(document).ready(function () {
                 }        
         });
     };
-
-  // google charts tech code 
-
-    google.charts.load('current', {'packages':['line']});
-        google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Day');
-      data.addColumn('number', 'Guardians of the Galaxy');
-      data.addColumn('number', 'The Avengers');
-      data.addColumn('number', 'Transformers: Age of Extinction');
-
-      data.addRows([
-        [1,  37.8, 80.8, 41.8],
-        [2,  30.9, 69.5, 32.4],
-        [3,  25.4,   57, 25.7],
-        [4,  11.7, 18.8, 10.5],
-        [5,  11.9, 17.6, 10.4],
-        [6,   8.8, 13.6,  7.7],
-        [7,   7.6, 12.3,  9.6],
-        [8,  12.3, 29.2, 10.6],
-        [9,  16.9, 42.9, 14.8],
-        [10, 12.8, 30.9, 11.6],
-        [11,  5.3,  7.9,  4.7],
-        [12,  6.6,  8.4,  5.2],
-        [13,  4.8,  6.3,  3.6],
-        [14,  4.2,  6.2,  3.4]
-      ]);
-
-      var options = {
-        chart: {
-          title: 'Comparison of' + stockTerm + 'against' + trendTerm,
-          subtitle: 'What are your wildest dreams?'
-        },
-        width: 1200,
-        height: 500
-      };
-
-      var chart = new google.charts.Line(document.getElementById('google-trend-img'));
-
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
-    // function initGraph() {
-    //     $("#google-trend-img").empty();
-    //     var image = $("<img>").attr("src", "assets/images/trends-example.png");
-    //     $("#google-trend-img").append(image);
-    // }
 });
