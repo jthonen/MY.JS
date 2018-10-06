@@ -185,8 +185,6 @@ $(document).ready(function () {
         });
     };
 
-
-
     // google charts tech code 
     function googlechart(stock, trend) {
         // This section is to load the google chart
@@ -272,23 +270,4 @@ $(document).ready(function () {
         });
     };
 
-    $("#addTrainId").on("click", function (event) {
-        event.preventDefault();
-
-        // get user input
-        var trainName = $("#trainNameId").val().trim();
-        var destination = $("#destinationNameId").val().trim();
-        var startTime = $("#firstTrainTimeId").val();
-        var freq = $("#frequencyTimeId").val();
-
-        var trainInfo = {
-            trainName: trainName,
-            destination: destination,
-            startTime: startTime,
-            freq: freq
-        };
-
-        // Uploads new train to the database
-        trainRef.push(trainInfo);
-    })
 });
